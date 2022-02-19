@@ -1,6 +1,5 @@
 import { Exclude } from 'class-transformer';
 import { Column, Entity, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { Role } from './role.entity';
 
 @Entity('users')
 export class User {
