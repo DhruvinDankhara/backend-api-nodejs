@@ -22,9 +22,9 @@ export class RolesGuard implements CanActivate {
     const token = request.headers['authorization'];
     const tokenService = new TokenService(new ConfigService());
     const verify = await tokenService.verify(token);
-    if (requiredRoles.some((role) => role === verify.role)) {
-      return true;
-    }
+    // if (requiredRoles.some((role) => role === verify.role)) {
+    //   return true;
+    // }
     return false;
   }
 }
