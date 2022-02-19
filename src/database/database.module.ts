@@ -11,7 +11,7 @@ const databaseProviders = [
       const config = configService.get('database');
       const env = configService.get('env');
       return await createConnection({
-        name: 'lirica_dev',
+        name: 'noob_mentor',
         type: config.DB_TYPE,
         host: config.DB_HOST,
         port: config.DB_PORT,
