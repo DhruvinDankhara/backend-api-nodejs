@@ -1,5 +1,6 @@
 import { Exclude } from 'class-transformer';
 import { Column, Entity, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { UserRole } from './userRole.entity';
 
 @Entity('users')
 export class User {
@@ -15,8 +16,8 @@ export class User {
   @Column({ type: 'varchar', unique: true })
   public email: string;
   
-  @Column({ type: "varchar", length: 10, nullable: true })
-  public emailVerificationCode: string;
+  @Column({ type: 'boolean', default: true })
+  public isActive: boolean;
 
   @Column({ type: "timestamptz", default: null })
   public emailVerifiedAt: Date;
@@ -33,4 +34,7 @@ export class User {
 
   @UpdateDateColumn({ type: "timestamptz", default: null })
   public updatedAt: Date;
+  
+  @OneToMany(type => UserRole, userRole => userRole.user)
+  public userRole: User;
 }

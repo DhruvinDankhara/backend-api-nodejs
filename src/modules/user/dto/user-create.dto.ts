@@ -25,6 +25,11 @@ export class UserCreateDto {
 
   @ApiProperty()
   @IsString()
-  @IsNotEmpty({ message: 'No lastname provided' })
-  public role: Role;
+  @IsNotEmpty({ message: 'No organization provided' })
+  public organization: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty({ message: 'No roleId provided' })
+  public roleId: string;
 }

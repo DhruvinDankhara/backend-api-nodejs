@@ -21,7 +21,7 @@ export class UserController {
 
   @HttpCode(200)
   @Post('/signup')
-  public async signup(@Body() data: UserCreateDto): Promise<AuthToken> {
+  public async signup(@Body() data: UserCreateDto): Promise<any> {
     return this.userService.signup(data);
   }
 

@@ -6,5 +6,6 @@ export class Errors {
     INVALID_TOKEN: 'Invalid Token',
     USER_NOT_FOUND: 'User not found',
     USER_EXISTS: 'User already exists',
+    DONT_HAVE_ACCESS: "you have don't access to this role"
   };
 }

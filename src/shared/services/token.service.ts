@@ -20,20 +20,21 @@ export class TokenService {
 
   public async generateNewTokens(user: User): Promise<AuthToken> {
     const tokens = new AuthToken();
+    delete user?.password;
     tokens.accessToken = await this.generateNewAccessToken(user);
     tokens.refreshToken = await this.generateNewRefeshToken(user);
     tokens.user = user;
     return tokens;
   }
 
-  public async generateNewRefeshToken(user: User): Promise<string> {
+  private async generateNewRefeshToken(user: User): Promise<string> {
     const token = new AuthToken();
     token.user = user;
     const refreshToken = await this.generateTokenId(token, 'refreshToken');
     return refreshToken;
   }
 
-  public async generateNewAccessToken(user: User): Promise<string> {
+  private async generateNewAccessToken(user: User): Promise<string> {
     const token = new AuthToken();
     token.user = user;
     const accessToken = await this.generateTokenId(token, 'accessToken');
@@ -57,10 +58,26 @@ export class TokenService {
   public async verify(token: string): Promise<Auth> {
     let tokenClaim;
     try {
-      tokenClaim = jwt.verify(token, this.secretKey);
+      tokenClaim = jwt.verify(token, this.secretKey,{
+        maxAge: this.accessTokenExpr
+      });
     } catch (error) {
       return null;
     }
     return { ...tokenClaim };
   }
+
+  public async generateEmailTokenId(email: string): Promise<string> {
+    const expiresIn = process.env.EMAIL_EXPIRATION_TIME
+    return jwt.sign(
+      {
+        email,
+      },
+      this.secretKey,
+      {
+        expiresIn,
+      },
+    );
+  }
+
 }

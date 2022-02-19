@@ -1,12 +1,12 @@
-import { Role } from 'src/database/entities';
+import { Role, User } from 'src/database/entities';
 import { Column, Entity, CreateDateColumn, UpdateDateColumn, PrimaryGeneratedColumn, OneToMany, ManyToOne } from 'typeorm';
 
 @Entity('roles_users')
-export class User {
+export class UserRole {
   @PrimaryGeneratedColumn('increment')
   public id: number;
   
-  @ManyToOne(type => User, user => user.id)
+  @ManyToOne(type => User, user => user.userRole)
   public user: User;
 
   @ManyToOne(type => Role, role => role.id)

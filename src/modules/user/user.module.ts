@@ -2,7 +2,7 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { Module } from '@nestjs/common';
 import { Connection } from 'typeorm';
-import { UserRepository } from 'src/shared/repository';
+import { UserRepository, UserRoleRepository } from 'src/shared/repository';
 import { TokenService } from 'src/shared/services/token.service';
 import { ConfigModule } from 'src/config/config.module';
 import { DatabaseModule } from 'src/database/database.module';
@@ -19,6 +19,11 @@ import { FileService } from 'src/shared/services/file.service';
     {
       provide: UserRepository,
       useFactory: (connection: Connection) => connection.getCustomRepository(UserRepository),
+      inject: [Connection],
+    },
+    {
+      provide: UserRoleRepository,
+      useFactory: (connection: Connection) => connection.getCustomRepository(UserRoleRepository),
       inject: [Connection],
     },
   ],
