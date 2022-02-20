@@ -20,8 +20,8 @@ export class UserService {
 
   public async login(data: UserLoginDto): Promise<AuthToken> {
     try {
-      const { email, password, roleId } = data;
-      const checkUser = await this.userRepo.findUserAccountByEmail({email,roleId});
+      const { email, password, role } = data;
+      const checkUser = await this.userRepo.findUserAccountByEmail({email,role});
       console.log(checkUser);
       
       if (!checkUser) {
@@ -31,8 +31,8 @@ export class UserService {
       if (!matchPassword) {
         throw new BadRequestException(Errors.ErrorMessages.INVALID_PASSWORD);
       }
+      checkUser['roleId'] = checkUser?.userRole[0]?.role?.id;
       delete checkUser?.userRole;
-      checkUser['roleId'] = roleId;
       return await this.tokenService.generateNewTokens(checkUser);
     } catch (e) {
       handleError(e);
@@ -40,7 +40,6 @@ export class UserService {
   }
 
   public async signup(data: UserCreateDto): Promise<any>
-  // Promise<AuthToken> 
   {
     try {
       const { email, password, firstName, lastName, roleId, organization } = data;
@@ -73,10 +72,10 @@ export class UserService {
       // send Email
       const endAttachmentForEmail = process.env.EMAIL_VALIDATION_URL + '/' + await this.tokenService.generateEmailTokenId(user.email);
       console.log('Email Sended', endAttachmentForEmail);
-      delete user?.userRole;
       user["isCategoryNeeded"] = true;
-      user["roleId"] = roleId;
+      user['roleId'] = user?.userRole[0]?.role?.id;
       user['verifyLink'] = endAttachmentForEmail; // TODO : delete when Email Service Integrated...
+      delete user?.userRole;
       return await this.tokenService.generateNewTokens(user);
     } catch (e) {
       handleError(e);

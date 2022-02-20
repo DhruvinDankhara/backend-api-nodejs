@@ -15,5 +15,5 @@ export class UserLoginDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty({ message: 'No roleId provided' })
-  public roleId: string;
+  public role: string;
 }

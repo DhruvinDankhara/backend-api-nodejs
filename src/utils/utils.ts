@@ -17,6 +17,17 @@ export const handleError = (e) => {
   throw e;
 };
 
+export const sort = (orderBy: string) => {
+  if (!orderBy) {
+    return undefined;
+  }
+
+  let [column, order] = orderBy.split("-");
+  return {
+    [column]: order === "ASC" ? "ASC" : "DESC",
+  };
+};
+
 export async function readFilePromise(filePath): Promise<string> {
   return new Promise((resolve, reject) => {
     readFile(filePath, 'utf8', (err, html) => {

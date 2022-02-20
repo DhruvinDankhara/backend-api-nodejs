@@ -13,9 +13,10 @@ import { ConsoleModule } from 'nestjs-console';
 import { UserController } from './modules/user/user.controller';
 import { UserRepository } from './shared/repository';
 import { NotificationService } from './shared/services/notification.service';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
-  imports: [AdminModule, TerminusModule, ConfigModule, DatabaseModule, UserModule, ConsoleModule],
+  imports: [AdminModule, TerminusModule, ConfigModule, DatabaseModule, UserModule, ConsoleModule,CategoryModule],
   controllers: [AdminController, HealthController, UserController],
   providers: [FileService, EmailService, TokenService, NotificationService, Logger, UserRepository],
 })
