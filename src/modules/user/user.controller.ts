@@ -1,4 +1,4 @@
-import { Body, ClassSerializerInterceptor, Controller, HttpCode, Post, UseInterceptors } from '@nestjs/common';
+import { Body, ClassSerializerInterceptor, Controller, Get, HttpCode, Param, Post, Query, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { AuthToken } from 'src/shared/interfaces';
 import { FileService } from 'src/shared/services/file.service';
@@ -29,5 +29,17 @@ export class UserController {
   @Post('/refresh-token')
   public async getAccessToken(@Body() data: TokenDto): Promise<AuthToken> {
     return this.userService.getToken(data.refreshToken);
+  }
+  
+  @HttpCode(200)
+  @Get('/get-mentors')
+  public async getAllMentors(@Query() query): Promise<any> {    
+    return this.userService.getAllMentors(query);
+  }
+  
+  @HttpCode(200)
+  @Get('/:id')
+  public async getUserById(@Param('id') id:string): Promise<any> {
+    return this.userService.getUserById(id);
   }
 }

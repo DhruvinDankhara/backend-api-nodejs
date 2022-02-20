@@ -22,8 +22,6 @@ export class UserService {
     try {
       const { email, password, role } = data;
       const checkUser = await this.userRepo.findUserAccountByEmail({email,role});
-      console.log(checkUser);
-      
       if (!checkUser) {
         throw new NotFoundException(Errors.ErrorMessages.USER_NOT_FOUND);
       }
@@ -32,6 +30,7 @@ export class UserService {
         throw new BadRequestException(Errors.ErrorMessages.INVALID_PASSWORD);
       }
       checkUser['roleId'] = checkUser?.userRole[0]?.role?.id;
+      checkUser['role_user_id'] = checkUser?.userRole[0]?.id;
       delete checkUser?.userRole;
       return await this.tokenService.generateNewTokens(checkUser);
     } catch (e) {
@@ -43,7 +42,9 @@ export class UserService {
   {
     try {
       const { email, password, firstName, lastName, roleId, organization } = data;
-      let user = await this.userRepo.findUserAccountByEmail(email);
+      let user = await this.userRepo.findUserAccountByEmail({email,roleId});
+      console.log(user);
+      
       if (user) {
 
         const userRole = await this.userRoleRepo.findByUserIdAndRoleId({
@@ -65,7 +66,7 @@ export class UserService {
         }));
       }
       
-      await this.userRoleRepo.save(Object.assign(new UserRole(), {
+      const userRole = await this.userRoleRepo.save(Object.assign(new UserRole(), {
         user: user.id,
         role: roleId
       }));
@@ -73,7 +74,8 @@ export class UserService {
       const endAttachmentForEmail = process.env.EMAIL_VALIDATION_URL + '/' + await this.tokenService.generateEmailTokenId(user.email);
       console.log('Email Sended', endAttachmentForEmail);
       user["isCategoryNeeded"] = true;
-      user['roleId'] = user?.userRole[0]?.role?.id;
+      user['roleId'] = +roleId;
+      user['role_user_id'] = userRole.id;
       user['verifyLink'] = endAttachmentForEmail; // TODO : delete when Email Service Integrated...
       delete user?.userRole;
       return await this.tokenService.generateNewTokens(user);
@@ -97,4 +99,20 @@ export class UserService {
       throw new HttpException(e.message, HttpStatus.PARTIAL_CONTENT);
     }
   }
+  
+  public async getAllMentors(query:any): Promise<any> {
+      try {
+        return await this.userRepo.findAllMentors(query);
+      } catch (e) {
+        handleError(e);
+      }
+  }
+    
+  public async getUserById(id:string): Promise<any> {
+      try {
+        return await this.userRepo.findById(id);
+      } catch (e) {
+        handleError(e);
+      }
+    }
 }
